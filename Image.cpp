@@ -118,7 +118,11 @@ void Image::filterBlue()
 }
 void Image::greyScale()
 {
-
+    for(int i=0; i < this->w * this-> h; i++)
+    {
+        float y = (0.2126 * this->pixels[i].r) + (0.7152 * this->pixels[i].g) + (0.0722 * this->pixels[i].b);
+        this->pixels[i].r = this->pixels[i].g = this->pixels[i].b = y;
+    }
 }
 void Image::flipHorizontal()
 {
