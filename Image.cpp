@@ -94,15 +94,27 @@ bool Image::savePPM(string filename)
 
 void Image::filterRed()
 {
-
+    for(int i=0; i < this->w * this-> h; i++)
+    {
+        this->pixels[i].g = 0;
+        this->pixels[i].b = 0;
+    }
 }
 void Image::filterGreen()
 {
-
+    for(int i=0; i < this->w * this-> h; i++)
+    {
+        this->pixels[i].r = 0;
+        this->pixels[i].b = 0;
+    }
 }
 void Image::filterBlue()
 {
-
+    for(int i=0; i < this->w * this-> h; i++)
+    {
+        this->pixels[i].g = 0;
+        this->pixels[i].r = 0;
+    }
 }
 void Image::greyScale()
 {
