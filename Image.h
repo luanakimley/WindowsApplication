@@ -21,9 +21,6 @@ struct Rgb
 };
 
 class Image {
-
-
-
     Image(const unsigned int _w, const unsigned int _h) :
             w(_w), h(_h), pixels(nullptr)
     {
