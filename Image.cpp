@@ -66,7 +66,29 @@ bool Image::loadRaw(string filename)
 }
 bool Image::savePPM(string filename)
 {
-    return false;
+    if(this->w == 0 || this-> h == 0) return false;
+
+    std::ofstream ofs;
+
+    ofs.open(filename, std::ios::binary);
+
+    if(ofs.fail()) return false;
+
+    ofs << "P6\n" << this->w << " " << this->h << "\n255\n";
+
+    unsigned char r, g, b;
+
+    for (int i=0; i< this->w * this->h; i++)
+    {
+        r = this->pixels[i].r;
+        g = this->pixels[i].g;
+        b = this->pixels[i].b;
+        ofs << r << g << b;
+    }
+
+    ofs.close();
+
+    return true;
 }
 
 
