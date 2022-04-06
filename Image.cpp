@@ -7,12 +7,12 @@
 #include <cstring>
 #include "Image.h"
 
-
+using namespace std;
 
 bool Image::load(string filename)
 {
-    std::ifstream ifs;
-    ifs.open(filename, std::ios::binary);
+    ifstream ifs;
+    ifs.open(filename, ios::binary);
     // need to spec. binary mode for Windows users
 
 
@@ -20,7 +20,7 @@ bool Image::load(string filename)
         return false;
     }
 
-    std::string header;
+    string header;
     int width, height, b;
     ifs >> header;
     if (strcmp(header.c_str(), "P6") != 0) return false;
@@ -68,9 +68,9 @@ bool Image::savePPM(string filename)
 {
     if(this->w == 0 || this-> h == 0) return false;
 
-    std::ofstream ofs;
+    ofstream ofs;
 
-    ofs.open(filename, std::ios::binary);
+    ofs.open(filename, ios::binary);
 
     if(ofs.fail()) return false;
 
@@ -126,12 +126,30 @@ void Image::greyScale()
 }
 void Image::flipHorizontal()
 {
-
-
+    for(int x=0; x < this->h; x++)
+    {
+        for (int y=0; y < this->w/2; y++)
+        {
+            swap(this->pixels[(x * w + y)].r, this->pixels[(x * w + (w - y))].r);
+            swap(this->pixels[(x * w + y)].g, this->pixels[(x * w + (w - y))].g);
+            swap(this->pixels[(x * w + y)].b, this->pixels[(x * w + (w - y))].b);
+        }
+    }
 }
 void Image::flipVertically()
 {
-
+    for(int x=0; x < this->w; x++)
+    {
+        for (int y=0; y < this->h/2; y++)
+        {
+            swap(this->pixels[(x + y * w)].r, this->pixels[(x + (h - 1 - y) * w)].r);
+            swap(this->pixels[(x + y * w)].g, this->pixels[(x + (h - 1 - y) * w)].g);
+            swap(this->pixels[(x + y * w)].b, this->pixels[(x + (h - 1 - y) * w)].b);
+        }
+    }
+}
+void Image::AdditionalFunction1()
+{
 
 }
 void Image::AdditionalFunction2()
@@ -139,10 +157,6 @@ void Image::AdditionalFunction2()
 
 }
 void Image::AdditionalFunction3()
-{
-
-}
-void Image::AdditionalFunction1()
 {
 
 }
