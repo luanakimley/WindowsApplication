@@ -147,7 +147,18 @@ void Image::flipVertically()
 }
 void Image::AdditionalFunction1()
 {
+    Image* copy = new Image(this);
 
+    for(int x=0; x<w; x++) {
+        for(int y=0; y<h; y++) {
+            this->pixels[y + x * h] = copy->pixels[x + (h - 1 - y) * w];
+        }
+    }
+
+    swap(w, h);
+
+    delete copy;
+    copy = nullptr;
 }
 void Image::AdditionalFunction2()
 {

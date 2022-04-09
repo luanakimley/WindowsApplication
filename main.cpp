@@ -50,7 +50,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     AppendMenuW(Alter, MF_STRING, IDM_EDIT_FilterGreen, L"&Show Only Green"); // Copy this line to add
     AppendMenuW(Alter, MF_STRING, IDM_EDIT_FilterBlue, L"&Show Only Blue"); // Copy this line to add
     AppendMenuW(Alter, MF_SEPARATOR, 0, NULL);
-    AppendMenuW(Alter, MF_STRING, IDM_EDIT_AD1, L"&Additional Function 1"); // Copy this line to add
+    AppendMenuW(Alter, MF_STRING, IDM_EDIT_AD1, L"&Rotate 90° clockwise"); // Copy this line to add
     AppendMenuW(Alter, MF_STRING, IDM_EDIT_AD2, L"&Additional Function 2"); // Copy this line to add
     AppendMenuW(Alter, MF_STRING, IDM_EDIT_AD3, L"&Additional Function 3"); // Copy this line to add
      // Copy this line to add
@@ -119,7 +119,6 @@ void processMenu(HWND hWnd, WPARAM wParam)
             image->filterBlue();
             break;
         case IDM_EDIT_AD1:
-
             image->AdditionalFunction1();
             break;
         case IDM_EDIT_AD2:

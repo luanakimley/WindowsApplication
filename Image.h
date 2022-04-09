@@ -29,12 +29,24 @@ class Image {
     }
 
     unsigned int w, h;
-    Rgb *pixels;
+    Rgb *pixels{};
 public:
     Image() : w(300), h(400)
     {
         pixels = new Rgb[w * h];
     }
+
+    explicit Image(const Image* obj)
+    {
+        w = obj->w;
+        h = obj->h;
+        pixels = new Rgb[obj->w*obj->h];
+        for(int i=0; i<w*h; i++)
+        {
+            pixels[i] = obj->pixels[i];
+        }
+    }
+
     bool savePPM(string filename);
     bool load(string filename);
     bool loadRaw(string filename);
