@@ -100,6 +100,7 @@ void Image::filterRed()
         this->pixels[i].b = 0;
     }
 }
+
 void Image::filterGreen()
 {
     for(int i=0; i < this->w * this-> h; i++)
@@ -130,9 +131,7 @@ void Image::flipHorizontal()
     {
         for (int y=0; y < this->w/2; y++)
         {
-            swap(this->pixels[(x * w + y)].r, this->pixels[(x * w + (w - y))].r);
-            swap(this->pixels[(x * w + y)].g, this->pixels[(x * w + (w - y))].g);
-            swap(this->pixels[(x * w + y)].b, this->pixels[(x * w + (w - y))].b);
+            swap(this->pixels[(x * w + y)], this->pixels[(x * w + (w - y))]);
         }
     }
 }
@@ -142,9 +141,7 @@ void Image::flipVertically()
     {
         for (int y=0; y < this->h/2; y++)
         {
-            swap(this->pixels[(x + y * w)].r, this->pixels[(x + (h - 1 - y) * w)].r);
-            swap(this->pixels[(x + y * w)].g, this->pixels[(x + (h - 1 - y) * w)].g);
-            swap(this->pixels[(x + y * w)].b, this->pixels[(x + (h - 1 - y) * w)].b);
+            swap(this->pixels[(x + y * w)], this->pixels[(x + (h - 1 - y) * w)]);
         }
     }
 }
