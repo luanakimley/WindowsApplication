@@ -218,15 +218,30 @@ void Image::AdditionalFunction2() // gaussian blur
             this->pixels[x*w+y].b = bSum;
         }
     }
-
-
-
-
-
 }
-void Image::AdditionalFunction3()
+void Image::AdditionalFunction3() // crop image to center 400px x 400px
 {
+    int cw = 400;
+    int ch = 400;
+    int cx = w / 2 - (cw / 2);
+    int cy = h / 2 - (ch / 2);
 
+    Image* crop = new Image(cw, ch);
+
+    for(int y = 0; y < ch; y++) {
+        if(y + cy >= h) break;
+        for(int x = 0; x < cw; x++) {
+            if(x + cx >= w) break;
+            memcpy(&crop->pixels[(x + y * cw)], &pixels[(x + cx + (y + cy) * w)], 3);
+        }
+    }
+
+    w = cw;
+    h = ch;
+
+    delete[] pixels;
+    pixels = crop->pixels;
+    crop = nullptr;
 }
 
 /* Functions used by the GUI - DO NOT MODIFY */
