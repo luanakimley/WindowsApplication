@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iomanip>
 #include <cstring>
+#include <cmath>
 #include "Image.h"
 
 using namespace std;
@@ -145,7 +146,7 @@ void Image::flipVertically()
         }
     }
 }
-void Image::AdditionalFunction1()
+void Image::AdditionalFunction1() // rotate 90 degrees clockwise
 {
     Image* copy = new Image(this);
 
@@ -160,8 +161,67 @@ void Image::AdditionalFunction1()
     delete copy;
     copy = nullptr;
 }
-void Image::AdditionalFunction2()
+void Image::AdditionalFunction2() // gaussian blur
 {
+    // generate kernel
+    int kernel_size = 5;
+    double kernel[kernel_size * kernel_size];
+
+    double sigma = 2.0;
+    double r, s = 2.0 * sigma * sigma;
+
+    double sum = 0.0;
+
+    int i, j;
+    double mean = kernel_size/2;
+    for(i=0; i < kernel_size; i++)
+    {
+        for (j = 0; j < kernel_size; j++)
+        {
+            kernel[(i*kernel_size)+j] =exp( -0.5 * (pow((i-mean)/sigma, 2.0) + pow((j-mean)/sigma,2.0)) )
+                                       / (2 * M_PI * sigma * sigma);
+            sum += kernel[(i*kernel_size)+j];
+        }
+    }
+
+    // normalising the Kernel
+    for (int i = 0; i < kernel_size * kernel_size; ++i){
+        kernel[i] /= sum;
+    }
+
+
+    for(int x=0; x < h; x++)
+    {
+        for(int y=0; y<w; y++)
+        {
+            if (x <= kernel_size/2 || x >= h-kernel_size/2 || w <= kernel_size/2 || y >= w-kernel_size/2)
+                continue;
+
+            int k_ind = 0;
+            double rSum = 0.0;
+            double gSum = 0.0;
+            double bSum = 0.0;
+
+            for(int k_row = -kernel_size/2; k_row <= kernel_size / 2; ++k_row)
+            {
+                for(int k_col = -kernel_size/2; k_col <= kernel_size / 2; ++k_col)
+                {
+                    rSum += kernel[k_ind] * (this->pixels[w * (x + k_row) + y + k_col].r) ;
+                    gSum += kernel[k_ind] * (this->pixels[w * (x + k_row) + y + k_col].g) ;
+                    bSum += kernel[k_ind] * (this->pixels[w * (x + k_row) + y + k_col].b) ;
+                    k_ind++;
+                }
+            }
+
+            this->pixels[x*w+y].r = rSum;
+            this->pixels[x*w+y].g = gSum;
+            this->pixels[x*w+y].b = bSum;
+        }
+    }
+
+
+
+
 
 }
 void Image::AdditionalFunction3()
