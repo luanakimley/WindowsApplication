@@ -52,11 +52,12 @@ bool Image::loadRaw(string filename)
         for(int i=0; i< w*h; i++)
         {
             float r, g, b;
+            float gamma = 1/2.2;
             in >> r >> g >> b;
-            this->pixels[i].r = (unsigned char) (r * 255);
-            this->pixels[i].g = (unsigned char) (g * 255);
-            this->pixels[i].b = (unsigned char) (b * 255);
 
+            this->pixels[i].r = (unsigned char) (pow(r, gamma) * 255);
+            this->pixels[i].g = (unsigned char) (pow(g, gamma) * 255);
+            this->pixels[i].b = (unsigned char) (pow(b, gamma) * 255);
         }
 
         in.close();
@@ -242,6 +243,11 @@ void Image::AdditionalFunction3() // crop image to center 400px x 400px
     delete[] pixels;
     pixels = crop->pixels;
     crop = nullptr;
+}
+
+void Image::AdvancedFeature()
+{
+
 }
 
 /* Functions used by the GUI - DO NOT MODIFY */
