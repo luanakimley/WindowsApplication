@@ -54,11 +54,14 @@ public:
     void filterGreen();
     void filterBlue();
     void greyScale();
+    static void greyScale(Image* img);
     void flipHorizontal();
     void flipVertically();
     void AdditionalFunction1();
     void AdditionalFunction2();
     void AdditionalFunction3();
+    static void gaussianBlur(Image* img, double sigma);
+    void AdvancedFeature();
 
     /*Functions used in the GUI - DO NOT MODIFY */
     Rgb* getImage();

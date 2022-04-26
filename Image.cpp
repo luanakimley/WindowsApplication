@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <cstring>
 #include <cmath>
+#include <algorithm>
 #include "Image.h"
 
 using namespace std;
@@ -127,6 +128,14 @@ void Image::greyScale()
         this->pixels[i].r = this->pixels[i].g = this->pixels[i].b = y;
     }
 }
+void Image::greyScale(Image* img)
+{
+    for(int i=0; i < img->w * img-> h; i++)
+    {
+        float y = (0.2126 * img->pixels[i].r) + (0.7152 * img->pixels[i].g) + (0.0722 * img->pixels[i].b);
+        img->pixels[i].r = img->pixels[i].g = img->pixels[i].b = y;
+    }
+}
 void Image::flipHorizontal()
 {
     for(int x=0; x < this->h; x++)
@@ -174,13 +183,14 @@ void Image::AdditionalFunction2() // gaussian blur
     double sum = 0.0;
 
     int i, j;
-    double mean = kernel_size/2;
+    double mean = kernel_size/2.0;
     for(i=0; i < kernel_size; i++)
     {
         for (j = 0; j < kernel_size; j++)
         {
             kernel[(i*kernel_size)+j] =exp( -0.5 * (pow((i-mean)/sigma, 2.0) + pow((j-mean)/sigma,2.0)) )
                                        / (2 * M_PI * sigma * sigma);
+            cout << kernel[(i*kernel_size)+j] << endl;
             sum += kernel[(i*kernel_size)+j];
         }
     }
@@ -214,9 +224,66 @@ void Image::AdditionalFunction2() // gaussian blur
                 }
             }
 
-            this->pixels[x*w+y].r = rSum;
-            this->pixels[x*w+y].g = gSum;
-            this->pixels[x*w+y].b = bSum;
+            this->pixels[x*w+y].r = rSum ;
+            this->pixels[x*w+y].g = gSum ;
+            this->pixels[x*w+y].b = bSum ;
+        }
+    }
+}
+void Image::gaussianBlur(Image* img, double sigma) // gaussian blur
+{
+    // generate kernel
+    int kernel_size = 19;
+    double kernel[kernel_size * kernel_size];
+
+    double r, s = 2.0 * sigma * sigma;
+
+    double sum = 0.0;
+
+    int i, j;
+    double mean = kernel_size/2.0;
+    for(i=0; i < kernel_size; i++)
+    {
+        for (j = 0; j < kernel_size; j++)
+        {
+            kernel[(i*kernel_size)+j] =exp( -0.5 * (pow((i-mean)/sigma, 2.0) + pow((j-mean)/sigma,2.0)) )
+                                       / (2 * M_PI * sigma * sigma);
+            sum += kernel[(i*kernel_size)+j];
+        }
+    }
+
+    // normalising the Kernel
+    for (int i = 0; i < kernel_size * kernel_size; ++i){
+        kernel[i] /= sum;
+    }
+
+
+    for(int x=0; x < img->h; x++)
+    {
+        for(int y=0; y<img->w; y++)
+        {
+            if (x <= kernel_size/2 || x >= img->h-kernel_size/2 || img->w <= kernel_size/2 || y >= img->w-kernel_size/2)
+                continue;
+
+            int k_ind = 0;
+            double rSum = 0.0;
+            double gSum = 0.0;
+            double bSum = 0.0;
+
+            for(int k_row = -kernel_size/2; k_row <= kernel_size / 2; ++k_row)
+            {
+                for(int k_col = -kernel_size/2; k_col <= kernel_size / 2; ++k_col)
+                {
+                    rSum += kernel[k_ind] * (img->pixels[img->w * (x + k_row) + y + k_col].r) ;
+                    gSum += kernel[k_ind] * (img->pixels[img->w * (x + k_row) + y + k_col].g) ;
+                    bSum += kernel[k_ind] * (img->pixels[img->w * (x + k_row) + y + k_col].b) ;
+                    k_ind++;
+                }
+            }
+
+            img->pixels[x*img->w+y].r = rSum;
+            img->pixels[x*img->w+y].g = gSum;
+            img->pixels[x*img->w+y].b = bSum;
         }
     }
 }
@@ -247,6 +314,39 @@ void Image::AdditionalFunction3() // crop image to center 400px x 400px
 
 void Image::AdvancedFeature()
 {
+    Image* greyImage = new Image(this);
+
+    greyScale(greyImage);
+
+    Image* blurImage = new Image(greyImage);
+
+    for(int i=0; i<w*h; i++)
+    {
+        blurImage->pixels[i].r = 255 - blurImage->pixels[i].r;
+        blurImage->pixels[i].g = 255 - blurImage->pixels[i].g;
+        blurImage->pixels[i].b = 255 - blurImage->pixels[i].b;
+    }
+
+    gaussianBlur(blurImage, 10.0);
+
+    // colour dodge
+    for(int i=0; i<w*h; i++)
+    {
+        if(greyImage->pixels[i].r == 255 && greyImage->pixels[i].g == 255 && greyImage->pixels[i].b == 255) {
+            this->pixels[i].r = 255;
+            this->pixels[i].g = 255;
+            this->pixels[i].b = 255;
+        }
+        else
+        {
+            this->pixels[i].r = (unsigned char) min(255.0,(blurImage->pixels[i].r * 255.0 / (255 - greyImage->pixels[i].r)));
+            this->pixels[i].g = (unsigned char) min(255.0,(blurImage->pixels[i].g * 255.0 / (255 - greyImage->pixels[i].g)));
+            this->pixels[i].b = (unsigned char) min(255.0,(blurImage->pixels[i].b * 255.0 / (255 - greyImage->pixels[i].b)));
+        }
+    }
+
+    greyImage = nullptr;
+    blurImage = nullptr;
 
 }
 
