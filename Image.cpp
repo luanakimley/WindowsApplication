@@ -190,7 +190,6 @@ void Image::AdditionalFunction2() // gaussian blur
         {
             kernel[(i*kernel_size)+j] =exp( -0.5 * (pow((i-mean)/sigma, 2.0) + pow((j-mean)/sigma,2.0)) )
                                        / (2 * M_PI * sigma * sigma);
-            cout << kernel[(i*kernel_size)+j] << endl;
             sum += kernel[(i*kernel_size)+j];
         }
     }
