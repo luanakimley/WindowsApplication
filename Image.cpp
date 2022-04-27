@@ -286,10 +286,20 @@ void Image::gaussianBlur(Image* img, double sigma) // gaussian blur
         }
     }
 }
-void Image::AdditionalFunction3() // crop image to center 400px x 400px
+void Image::AdditionalFunction3() // crop image to make it square
 {
-    int cw = 400;
-    int ch = 400;
+    int cw;
+    int ch;
+
+    if (w < h) {
+        cw = w;
+        ch = w;
+    }
+    else {
+        cw = h;
+        ch = h;
+    }
+
     int cx = w / 2 - (cw / 2);
     int cy = h / 2 - (ch / 2);
 
